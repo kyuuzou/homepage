@@ -2,10 +2,37 @@
 <html>
 <head>
   <title>Homepage</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    function fetchRSS() {
+      fetch('https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_epic_game.xml')
+        .then(response => response.json())
+        .then(data => {
+          const items = data.items.slice(0, 9); // Get the 9 most recent items
+
+          const rssItems = document.getElementById('rssItems');
+          items.forEach(item => {
+            const link = document.createElement('a');
+            link.href = item.link;
+            link.textContent = item.title;
+            link.target = '_blank';
+            link.style.display = 'block';
+            rssItems.appendChild(link);
+          });
+        })
+        .catch(error => console.error('Error fetching RSS:', error));
+    }
+
+    fetchRSS();
+  </script>
 </head>
 <body>
   <form id="search_form" action="https://www.google.com/search" method="get" target="_blank">
     <input type="text" id="search_query" name="q">
   </form>
+
+  <div id="rssItems"></div>
 </body>
 </html>
