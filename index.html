@@ -7,29 +7,33 @@
 
   <script>
     function fetchRSS(feeds) {
-      feeds.forEach(feedUrl => {
+      const rssItemsContainer = document.getElementById('rssItemsContainer');
+
+      feeds.forEach((feedUrl, index) => {
+        const rssSection = document.createElement('div');
+        rssSection.className = 'rss-section';
+        rssSection.id = `rssSection${index + 1}`;
+        rssItemsContainer.appendChild(rssSection);
+
         fetch(feedUrl)
           .then(response => response.json())
           .then(data => {
             const items = data.items.slice(0, 9);
 
-            const rssSection = document.createElement('div');
-            rssSection.className = 'rss-section';
+            const currentRssSection = document.getElementById(`rssSection${index + 1}`);
+            currentRssSection.innerHTML = ''; // Clear placeholder content
 
             const header = document.createElement('span');
             header.className = "neonText";
             header.innerText = data.feed.title;
-            rssSection.appendChild(header);
+            currentRssSection.appendChild(header);
 
             items.forEach(item => {
               const link = document.createElement('a');
-              link.class = "neonText";
               link.href = item.link;
               link.innerHTML = item.title;
-              rssSection.appendChild(link);
+              currentRssSection.appendChild(link);
             });
-
-            document.getElementById('rssItemsContainer').appendChild(rssSection);
           })
           .catch(error => console.error('Error fetching RSS:', error));
       });
@@ -44,7 +48,9 @@
       'https://api.rss2json.com/v1/api.json?rss_url=https://kotaku.com/rss'
     ];
 
-    fetchRSS(rssFeeds);
+    document.addEventListener('DOMContentLoaded', (event) => {    
+      fetchRSS(rssFeeds);
+    });
   </script>
 </head>
 <body>
