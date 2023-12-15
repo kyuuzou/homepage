@@ -26,7 +26,7 @@ input {
     border: green solid 1px;
     border-radius: 10px;
     background-color: rgb(9, 38, 25);
-    color: rgb(0, 255, 217);
+    color: rgb(214, 255, 30);
     font-size: 1.4em;
     margin: 0px 0px 10px 0px;
     padding: 10px;
@@ -35,12 +35,12 @@ input {
 }
 
 ::placeholder {
-    color: darkolivegreen;
+    color: olive;
     opacity: 1;
 }
 
 *:focus {
-    outline: rgb(0, 255, 217) solid 1px;
+    outline: rgb(214, 255, 30) solid 1px;
 }
 
 .grid-container {
