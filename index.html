@@ -13,6 +13,7 @@
         const rssSection = document.createElement('div');
         rssSection.className = 'rss-section';
         rssSection.id = `rssSection${index + 1}`;
+        rssSection.innerHTML = "<p><center>Loading: " + feedUrl + "</center></p>";
         rssItemsContainer.appendChild(rssSection);
 
         fetch(feedUrl)
@@ -21,7 +22,7 @@
             const items = data.items.slice(0, 9);
 
             const currentRssSection = document.getElementById(`rssSection${index + 1}`);
-            currentRssSection.innerHTML = ''; // Clear placeholder content
+            currentRssSection.innerHTML = '';
 
             const header = document.createElement('span');
             header.className = "neonText";
