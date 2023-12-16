@@ -6,29 +6,34 @@
   <link rel="stylesheet" href="style.css">
 
   <script>
+    function stripHtmlTags(input) {
+      return input.replace(/&lt;[^&]*?&gt;/g, '').replace(/<[^>]+>/g, '');
+    }
+
     function fetchSingleFeed(feedUrl, rssSection) {
       const rssItemsContainer = document.getElementById('rssItemsContainer');
 
-    fetch(feedUrl)
-      .then(response => response.json())
-      .then(data => {
-        const items = data.items.slice(0, 9);
+      fetch(feedUrl)
+        .then(response => response.json())
+        .then(data => {
+          const items = data.items.slice(0, 9);
 
-        rssSection.innerHTML = '';
+          rssSection.innerHTML = '';
 
-        const header = document.createElement('span');
-        header.className = "neonText";
-        header.innerText = data.feed.title;
-        rssSection.appendChild(header);
+          const header = document.createElement('span');
+          header.className = "neonText";
+          header.innerText = stripHtmlTags(data.feed.title);
+          rssSection.appendChild(header);
 
-        items.forEach(item => {
-          const link = document.createElement('a');
-          link.href = item.link;
-          link.innerHTML = item.title;
-          rssSection.appendChild(link);
-        });
-      })
-      .catch(error => console.error('Error fetching RSS:', error));
+          items.forEach(item => {
+            const link = document.createElement('a');
+            link.href = item.link;
+            link.innerHTML = stripHtmlTags(item.title);
+            console.log(link.innerHTML);
+            rssSection.appendChild(link);
+          });
+        })
+        .catch(error => console.error('Error fetching RSS:', error));
     }
 
     function fetchCompositeFeed(feeds, rssSection) {
@@ -50,13 +55,13 @@
 
           const header = document.createElement('span');
           header.className = 'neonText';
-          header.innerText = 'Combined Feeds: ' + dataArray[0].feed.title;
+          header.innerText = 'Combined Feeds: ' + stripHtmlTags(dataArray[0].feed.title);
           rssSection.appendChild(header);
 
           combinedEntries.slice(0, 9).forEach(item => {
             const link = document.createElement('a');
             link.href = item.link;
-            link.innerHTML = item.title;
+            link.innerHTML = stripHtmlTags(item.title);
             rssSection.appendChild(link);
           });
         })
