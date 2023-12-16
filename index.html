@@ -6,9 +6,64 @@
   <link rel="stylesheet" href="style.css">
 
   <script>
-    function fetchRSS(feeds) {
+    function fetchSingleFeed(feedUrl, rssSection) {
       const rssItemsContainer = document.getElementById('rssItemsContainer');
 
+    fetch(feedUrl)
+      .then(response => response.json())
+      .then(data => {
+        const items = data.items.slice(0, 9);
+
+        rssSection.innerHTML = '';
+
+        const header = document.createElement('span');
+        header.className = "neonText";
+        header.innerText = data.feed.title;
+        rssSection.appendChild(header);
+
+        items.forEach(item => {
+          const link = document.createElement('a');
+          link.href = item.link;
+          link.innerHTML = item.title;
+          rssSection.appendChild(link);
+        });
+      })
+      .catch(error => console.error('Error fetching RSS:', error));
+    }
+
+    function fetchCompositeFeed(feeds, rssSection) {
+        Promise.all(feeds.map(feedUrl =>
+          fetch(feedUrl)
+            .then(response => response.json())
+        ))
+        .then(dataArray => {
+          let combinedEntries = [];
+
+          rssSection.innerHTML = '';
+
+          dataArray.forEach(data => {
+            combinedEntries = combinedEntries.concat(data.items);
+          });
+
+          // Sort combinedEntries by date in descending order
+          combinedEntries.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+          const header = document.createElement('span');
+          header.className = 'neonText';
+          header.innerText = 'Combined Feeds: ' + dataArray[0].feed.title;
+          rssSection.appendChild(header);
+
+          combinedEntries.slice(0, 9).forEach(item => {
+            const link = document.createElement('a');
+            link.href = item.link;
+            link.innerHTML = item.title;
+            rssSection.appendChild(link);
+          });
+        })
+        .catch(error => console.error('Error fetching RSS:', error));
+    }
+
+    function fetchRSS(feeds) {
       feeds.forEach((feedUrl, index) => {
         const rssSection = document.createElement('div');
         rssSection.className = 'rss-section';
@@ -16,37 +71,27 @@
         rssSection.innerHTML = "<p><center>Loading: " + feedUrl + "</center></p>";
         rssItemsContainer.appendChild(rssSection);
 
-        fetch(feedUrl)
-          .then(response => response.json())
-          .then(data => {
-            const items = data.items.slice(0, 9);
-
-            const currentRssSection = document.getElementById(`rssSection${index + 1}`);
-            currentRssSection.innerHTML = '';
-
-            const header = document.createElement('span');
-            header.className = "neonText";
-            header.innerText = data.feed.title;
-            currentRssSection.appendChild(header);
-
-            items.forEach(item => {
-              const link = document.createElement('a');
-              link.href = item.link;
-              link.innerHTML = item.title;
-              currentRssSection.appendChild(link);
-            });
-          })
-          .catch(error => console.error('Error fetching RSS:', error));
+        if (feedUrl.length > 1) {
+          fetchCompositeFeed(feedUrl, rssSection);
+        } else {
+          fetchSingleFeed(feedUrl, rssSection);
+        }
       });
     }
 
     const rssFeeds = [
-      'https://api.rss2json.com/v1/api.json?rss_url=https://blog.unity.com/feed/technology',
-      'https://api.rss2json.com/v1/api.json?rss_url=https://www.unrealengine.com/en-US/rss',
-      'https://api.rss2json.com/v1/api.json?rss_url=https://blog.unity.com/feed/games',
-      'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_epic_game.xml',
-      'https://api.rss2json.com/v1/api.json?rss_url=https://www.tofugu.com/feed',
-      'https://api.rss2json.com/v1/api.json?rss_url=https://kotaku.com/rss'
+      ['https://api.rss2json.com/v1/api.json?rss_url=https://blog.unity.com/feed/technology'],
+      ['https://api.rss2json.com/v1/api.json?rss_url=https://www.unrealengine.com/en-US/rss'],
+      ['https://api.rss2json.com/v1/api.json?rss_url=https://blog.unity.com/feed/games'],
+      [
+        'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_epic_game.xml',
+        'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_gog_game.xml',
+        'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_humble_game.xml',
+        'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_steam_game.xml',
+        'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_ubisoft_game.xml',
+      ],
+      ['https://api.rss2json.com/v1/api.json?rss_url=https://www.tofugu.com/feed'],
+      ['https://api.rss2json.com/v1/api.json?rss_url=https://kotaku.com/rss']
     ];
 
     document.addEventListener('DOMContentLoaded', (event) => {    
