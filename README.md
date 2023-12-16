@@ -22,9 +22,12 @@ A webpage intended to be used as a homepage, with a search engine and customizab
 
 ## Version History
 
+* *1.1.0*
+    * Switch to 1-column layout on mobile devices.
+
 * *1.0.0*
-    * Added Google search
-    * Support for individual and composite feeds
+    * Added Google search.
+    * Support for individual and composite feeds.
 
 ## Contacting the Author
 
