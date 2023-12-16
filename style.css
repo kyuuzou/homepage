@@ -51,6 +51,12 @@ input {
     gap: 10px;
 }
 
+@media only screen and (max-width: 768px) {
+    [class*="grid-container"] {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
 .grid-container a {
     color: green;
     display: block;
