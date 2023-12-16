@@ -37,6 +37,9 @@
     }
 
     function fetchCompositeFeed(feeds, rssSection) {
+        const title = feeds[0];
+        feeds = feeds.slice(1);
+
         Promise.all(feeds.map(feedUrl =>
           fetch(feedUrl)
             .then(response => response.json())
@@ -55,7 +58,7 @@
 
           const header = document.createElement('span');
           header.className = 'neonText';
-          header.innerText = 'Combined Feeds: ' + stripHtmlTags(dataArray[0].feed.title);
+          header.innerText = title;
           rssSection.appendChild(header);
 
           combinedEntries.slice(0, 9).forEach(item => {
@@ -89,6 +92,7 @@
       ['https://api.rss2json.com/v1/api.json?rss_url=https://www.unrealengine.com/en-US/rss'],
       ['https://api.rss2json.com/v1/api.json?rss_url=https://blog.unity.com/feed/games'],
       [
+        'Game Deals',
         'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_epic_game.xml',
         'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_gog_game.xml',
         'https://api.rss2json.com/v1/api.json?rss_url=https://feed.phenx.de/lootscraper_humble_game.xml',
