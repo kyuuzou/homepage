@@ -7,7 +7,11 @@
 
   <script>
     function stripHtmlTags(input) {
-      return input.replace(/&lt;[^&]*?&gt;/g, '').replace(/<[^>]+>/g, '');
+      return input
+        .replace(/&lt;[^&]*?&gt;/g, '') // Remove <...> tags
+        .replace(/<[^>]+>/g, '')        // Remove other HTML tags
+        .replace(/&amp;nbsp;/g, ' ')    // Replace &nbsp; with a space
+        .replace(/&amp;[^;]+;/g, '');   // Remove HTML entities
     }
 
     function fetchSingleFeed(feedUrl, rssSection) {
