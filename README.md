@@ -22,6 +22,12 @@ A webpage intended to be used as a homepage, with a search engine and customizab
 
 ## Version History
 
+* *1.2.0* 
+    * HTML entities removed from story titles.
+    * Added GameFromScratch to default feeds.
+    * Removed Unity Technology and Unity games feeds, in favour of the general Unity feed.
+    * Added favicon.
+
 * *1.1.0*
     * Switch to 1-column layout on mobile devices.
 
